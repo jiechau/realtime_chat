@@ -1,5 +1,5 @@
 
-$ git clone https://gitlab.com/ysdt-ai-dev/frontend/liaoliao.git
+$ git clone https://gitlab.com/jiechau/realtime_chat.git
 
 
 $ cd liaoliao
