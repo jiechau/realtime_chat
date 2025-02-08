@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # only for mac/win, for linux, use host network
-docker network create chat-network 2>/dev/null || true
+docker network create --subnet=172.30.0.0/16 chat-network 2>/dev/null || true
 # Stop and remove existing containers if they exist
 docker rm -f mongodb realtime_chat 2>/dev/null || true
 
