@@ -19,11 +19,19 @@ app.use(cors({
 }));
 app.use(express.json());
 
-//mongoose.connect('mongodb://0.0.0.0:27017/chat_app', {
-mongoose.connect('mongodb://mongodb:27017/chat_app', {
+mongoose.set('strictQuery', false); // Add this line
+
+mongoose.connect('mongodb://mongodb:27017/chat_app', { // docker network
+//mongoose.connect('mongodb://172.26.8.103:27017/chat_app', { // local pc
+//mongoose.connect('mongodb://xxxxxx.cosmos.azure.com:10255/chat_app?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@xxxxxx@', {
   useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+  useUnifiedTopology: true,
+  retryWrites: false,
+  w: "majority",
+  // ssl: true // Important for Cosmos DB
+})
+.then(() => console.log('MongoDB Connected'))
+.catch(err => console.error('MongoDB Connection error:', err));
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
@@ -60,6 +68,9 @@ io.on('connection', (socket) => {
 });
 
 app.get('/api/contacts/:userId/:isVendor', async (req, res) => {
+  // Store params outside try block so they're accessible in catch
+  const { userId, isVendor } = req.params;  
+
   try {
     const { userId, isVendor } = req.params;
     const isVendorBool = isVendor === 'true';
@@ -82,6 +93,12 @@ app.get('/api/contacts/:userId/:isVendor', async (req, res) => {
 
     res.json(Array.from(contacts));
   } catch (error) {
+    // Add detailed error logging
+    console.error('Error in /api/contacts endpoint:');
+    console.error('Error message:', error.message);
+    console.error('Full error stack:', error.stack);
+    console.error('Request parameters:', { userId, isVendor });
+
     res.status(500).json({ error: 'Error fetching contacts' });
   }
 });
@@ -95,8 +112,13 @@ app.get('/api/messages/:userId/:contactId', async (req, res) => {
         { senderId: contactId, receiverId: userId }
       ]
     }).sort({ timestamp: 1 });
-    
+
+    // Add these lines to print messages to console
+    //console.log('Messages between users:', userId, 'and', contactId);
+    //console.log('Messages:', JSON.stringify(messages, null, 2));
+
     res.json(messages);
+
   } catch (error) {
     res.status(500).json({ error: 'Error fetching messages' });
   }

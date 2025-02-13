@@ -35,6 +35,7 @@ export default {
   },
   setup() {
     const store = useStore();
+    //const socket = io('http://172.26.8.103:3000');
     //const socket = io('http://localhost:3000');
     const socket = io('http://' + window.location.hostname + ':3000');
     const contacts = ref([]);
@@ -46,7 +47,8 @@ export default {
     const loadContacts = async () => {
       try {
         const response = await axios.get(
-          // `http://localhost:3000/api/contacts/${userId}/${isVendor}`
+          //`http://http://172.26.8.103:3000/api/contacts/${userId}/${isVendor}`
+          //`http://localhost:3000/api/contacts/${userId}/${isVendor}`
           `http://${window.location.hostname}:3000/api/contacts/${userId}/${isVendor}`
         );
         contacts.value = response.data;
@@ -58,6 +60,7 @@ export default {
     const loadMessages = async (contactId) => {
       try {
         const response = await axios.get(
+          //`http://172.26.8.103:3000/api/messages/${userId}/${contactId}`
           //`http://localhost:3000/api/messages/${userId}/${contactId}`
           `http://${window.location.hostname}:3000/api/messages/${userId}/${contactId}`
         );

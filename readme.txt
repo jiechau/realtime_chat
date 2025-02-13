@@ -1,15 +1,22 @@
 
 $ git clone https://gitlab.com/jiechau/realtime_chat.git
 
+# if use docker network with a local mongodb
+$ cd realtime_chat
+$ ./docker_network_run.sh
+http://localhost:5173/
+http://localhost:5173/
+$ ./docker_network_rm.sh
 
-$ cd liaoliao
+# if no use docker network
+# edit server/server.js, ln:24, edit mongodb connection string
 $ ./docker_run.sh
 http://localhost:5173/
 http://localhost:5173/
 $ ./docker_rm.sh
 
 
-liaoliao/
+realtime_chat/
 │
 ├── server/
 │   ├── package.json
